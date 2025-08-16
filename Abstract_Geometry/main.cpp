@@ -17,8 +17,28 @@ namespace Geometry
 
 	class Shape
 	{
+		static const int MIN_START_X = 100;
+		static const int MIN_START_Y = 100;
+		static const int MAX_START_X = 800;
+		static const int MAX_START_Y = 600;
+		static const int MIN_LINE_WIDTH = 1;
+		static const int MAX_LINE_WIDTH = 32;
+		static const int MIN_SIZE = 32;
+		static const int MAX_SIZE = 800;
+
+		int start_x;
+		int start_y;
+		int line_width;
+
 		Color color;//öâåò ôèãóðû
+
 	public:
+		void set_star_x(int start_x)
+		{
+			this->start_x = start_x<MIN_START_X ? MIN_START_X :
+				start_x>MAX_START_X ? MAX_START_X :
+				start_x;
+		}
 		void set_color(Color color)
 		{
 			this->color = color;
@@ -122,10 +142,10 @@ namespace Geometry
 		void draw()const override
 		{
 			//cout << "ÏÐßÌÎÓÃÎËÜÍÈÊ" << endl;
-			
+
 			HWND hwnd = GetConsoleWindow();
 			HDC hdc = GetDC(hwnd);
-			HPEN hPen = CreatePen(PS_SOLID,1,RGB(255,0,0));
+			HPEN hPen = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
 			HBRUSH HBrush = CreateSolidBrush(RGB(255, 0, 0));
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, HBrush);
@@ -148,9 +168,9 @@ namespace Geometry
 
 void main() {
 	setlocale(LC_ALL, "");
-	Geometry::Square square(5,Geometry:: Color::Red);
+	Geometry::Square square(5, Geometry::Color::Red);
 	square.info();
-	Geometry::Rectangle rectangle(20, 15, Geometry:: Color::Red);
+	Geometry::Rectangle rectangle(20, 15, Geometry::Color::Red);
 	rectangle.info();
 
 
