@@ -15,6 +15,9 @@ namespace Geometry
 		Violet = 0x00FF00FF
 	};
 
+#define SHAPE_TAKE_PARAMETERS int start_x, int start_y, int line_widh, Color color
+#define SHAPE_GIVE_PARAMETERS start_x, start_y, line_widh, color
+
 	class Shape
 	{
 		static const int MIN_START_X = 100;
@@ -26,6 +29,7 @@ namespace Geometry
 		static const int MIN_SIZE = 32;
 		static const int MAX_SIZE = 800;
 
+	protected:
 		int start_x;
 		int start_y;
 		int line_width;
@@ -33,15 +37,44 @@ namespace Geometry
 		Color color;//цвет фигуры
 
 	public:
-		void set_star_x(int start_x)
+		void set_start_x(int start_x)
 		{
-			this->start_x = start_x<MIN_START_X ? MIN_START_X :
+			this->start_x =
+				start_x<MIN_START_X ? MIN_START_X :
 				start_x>MAX_START_X ? MAX_START_X :
 				start_x;
 		}
+		void set_start_y(int start_y)
+		{
+			this->start_y=
+				start_y<MIN_START_Y ? MIN_START_Y :
+				start_y>MAX_START_Y ? MAX_START_Y :
+				start_y;
+		}
+		void set_line_width(int line_width)
+		{
+			this->line_width =
+				line_width<MIN_LINE_WIDTH ? MIN_LINE_WIDTH :
+				line_width>MAX_LINE_WIDTH ? MAX_LINE_WIDTH :
+				line_width;
+		}
+
 		void set_color(Color color)
 		{
 			this->color = color;
+		}
+
+		double get_start_x()const
+		{
+			return start_x;
+	}
+		double get_start_y()const
+		{
+			return start_y;
+		}
+		double get_line_width()const
+		{
+			return line_width;
 		}
 		Color get_color()const
 		{
@@ -51,7 +84,12 @@ namespace Geometry
 		virtual double get_perimeter()const = 0;
 		virtual void draw()const = 0;
 
-		Shape(Color color) :color(color) {}
+		Shape(SHAPE_TAKE_PARAMETERS) :color(color) 
+		{
+			set_start_x(start_x);
+			set_start_y(start_y);
+			set_line_width(line_widh);
+		}
 		virtual void info()const
 		{
 			cout << "Площадь фигуры: " << get_area() << endl;
@@ -60,7 +98,8 @@ namespace Geometry
 		}
 
 	};
-	class Square :public Shape
+
+	/*class Square :public Shape
 	{
 		double side;
 	public:
@@ -92,7 +131,7 @@ namespace Geometry
 				cout << endl;
 			}
 		}
-		Square(double side, Color color) : Shape(color)
+		Square(double side, SHAPE_TAKE_PARAMETERS) : Shape(SHAPE_GIVE_PARAMETERS)
 		{
 			set_side(side);
 		}
@@ -102,7 +141,8 @@ namespace Geometry
 			cout << "Сторона квадрата: " << get_side() << endl;
 			Shape::info();
 		}
-	};
+	};*/
+	
 	class Rectangle :public Shape
 	{
 		double side_1;
@@ -133,7 +173,7 @@ namespace Geometry
 		{
 			return (side_1 + side_2) * 2;
 		}
-		Rectangle(double side_1, double side_2, Color color) :Shape(color)
+		Rectangle(double side_1, double side_2, SHAPE_TAKE_PARAMETERS) :Shape(SHAPE_GIVE_PARAMETERS)
 		{
 			set_side_1(side_1);
 			set_side_2(side_2);
@@ -145,11 +185,11 @@ namespace Geometry
 
 			HWND hwnd = GetConsoleWindow();
 			HDC hdc = GetDC(hwnd);
-			HPEN hPen = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
-			HBRUSH HBrush = CreateSolidBrush(RGB(255, 0, 0));
+			HPEN hPen = CreatePen(PS_SOLID, line_width,color);
+			HBRUSH HBrush = CreateSolidBrush(color);
 			SelectObject(hdc, hPen);
 			SelectObject(hdc, HBrush);
-			::Rectangle(hdc, 200, 200, 400, 400);
+			::Rectangle(hdc, start_x, start_y, start_x+side_1,start_y+side_2);
 			DeleteObject(HBrush);
 			DeleteObject(hPen);
 			ReleaseDC(hwnd, hdc);
@@ -163,14 +203,18 @@ namespace Geometry
 			Shape::info();
 		}
 	};
+	class Square :public Rectangle
+	{
+	public:
+		Square(double side, SHAPE_TAKE_PARAMETERS) :Rectangle(side, side,SHAPE_GIVE_PARAMETERS){}
+	};
 }
-
 
 void main() {
 	setlocale(LC_ALL, "");
-	Geometry::Square square(5, Geometry::Color::Red);
+	Geometry::Square square(50,300,50,5, Geometry::Color::Green);
 	square.info();
-	Geometry::Rectangle rectangle(20, 15, Geometry::Color::Red);
+	Geometry::Rectangle rectangle(200,150,550,100,1, Geometry::Color::Blue);
 	rectangle.info();
 
 
