@@ -196,18 +196,19 @@ namespace Geometry
 	};
 	class Triangle :public Shape
 	{
-		
 		double side_1;
 		double side_2;
 		double side_3;
 
 	public:
-		void set_side_1(double side_1) { this->side_1 = side_1; }
+		void set_side_1(double side_1) { 
+//сделать проверку на существование треугольника
+			
+			this->side_1 = side_1; }
 
 		void set_side_2(double side_2) { this->side_2 = side_2; }
 
 		void set_side_3(double side_3) { this->side_3 = side_3; }
-
 
 		double get_side_1()const { return side_1; }
 
@@ -251,8 +252,8 @@ namespace Geometry
 			
 			return p3 =
 			{
-				p3.x = static_cast<LONG>(temp_p.x - height * (p2.y - p1.y) / get_side_1()),
-				p3.y = static_cast<LONG>(temp_p.y + height * (p2.x - p1.x) / get_side_1())
+				p3.x = temp_p.x - height * (p2.y - p1.y) / get_side_1(),
+				p3.y = temp_p.y + height * (p2.x - p1.x) / get_side_1()
 			};
 		}
 		//LONG — это тип данных, который используется в Windows API.
@@ -348,7 +349,7 @@ namespace Geometry
 			Shape::info();
 		}
 	};
-}// exit from namespace Geometry
+}
 
 void main() {
 	setlocale(LC_ALL, "");
@@ -356,12 +357,19 @@ void main() {
 	square.info();
 	Geometry::Rectangle rectangle(200, 150, 550, 100, 1, Geometry::Color::Blue);
 	rectangle.info();
-	Geometry::Rectangle rectangle_2(150, 200, 400, 120, 2, Geometry::Color::Violet);
+	Geometry::Rectangle rectangle_2(150, 200, 550, 200, 2, Geometry::Color::Violet);
 	rectangle_2.info();
-	Geometry::Triangle triangle(100, 100, 150, 200, 200, 2, Geometry::Color::Green);
+	Geometry::Triangle triangle(100, 100, 150, 550, 280, 2, Geometry::Color::Green);
 	triangle.info();
-	Geometry::Circle circle(100, 300, 400, 3, Geometry::Color::Violet);
+	Geometry::Circle circle(100, 550, 400, 3, Geometry::Color::Violet);
 	circle.info();
+	/*while (true)
+	{
+		square.draw();
+		rectangle.draw();
+		circle.draw();
+		triangle.draw();
+	}*/
 
 
 
